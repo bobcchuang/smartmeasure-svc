@@ -1,0 +1,56 @@
+# Python package
+# Create and test a Python package on multiple Python versions.
+# Add steps that analyze code, save the dist with the build record, publish to a PyPI-compatible index, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/python
+
+ trigger:
+ - main
+
+pool:
+  vmImage: ubuntu-latest
+strategy:
+  matrix:
+    Python36:
+      python.version: '3.6'
+
+
+steps:
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: '$(python.version)'
+  displayName: 'Use Python $(python.version)'
+
+- script: |
+    python -m pip install --upgrade pip
+    if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+    python -m pip install flake8 pytest setuptools setuptools-scm wheel twine pylint pylint_junit opencv-python==4.1.1.26 Pillow numpy keyring artifacts-keyring
+  displayName: 'Install dependencies'
+
+- script: | 
+    pylint auoutils
+    pylint *.py
+  displayName: 'Pylint'
+  continueOnError: true
+
+- script: |
+    python setup.py sdist bdist_wheel
+  displayName: 'build utils whl'
+
+- script: | 
+    python -m pip install auoutils --no-index --find-link=./dist/
+  displayName: 'Install new package'
+
+- script: |
+    pip install pytest pytest-azurepipelines
+    pytest
+  workingDirectory: 'tests/'
+  displayName: 'pytest'
+  continueOnError: true
+- task: TwineAuthenticate@0
+  inputs:
+    artifactFeeds: 'DeryannHuang0816'
+    
+- script: |
+    twine upload -r DeryannHuang0816 --config-file $(PYPIRC_PATH) dist/*
+  displayName: 'upload DeryannHuang0816 artifacts'
+    

@@ -1,0 +1,11 @@
+python3 main_measure.py \
+--img_path ./dataset/ABA0D17U1T_5_0001_1013448_0464771.jpg \
+--output_path ./output/test/ \
+--temp1_path ./output/template_1.jpg \
+--temp2_path ./output/template_2.jpg \
+--temp3_path ./output/template_3.jpg \
+--temp4_path ./output/template_3.jpg \
+--match_threshold4 0.1 \
+--match_threshold3 0.1 \
+--clear_threshold 5.0 \
+--ssim_threshold 0.98

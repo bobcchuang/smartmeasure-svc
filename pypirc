@@ -1,0 +1,6 @@
+[distutils]
+Index-servers =
+  DeryannHuang0816
+
+[DeryannHuang0816]
+Repository = https://deryannhuang0816.pkgs.visualstudio.com/_packaging/DeryannHuang0816/pypi/upload
